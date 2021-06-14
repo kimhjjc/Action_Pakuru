@@ -5,11 +5,11 @@ using UnityEngine;
 public class Pattern : MonoBehaviour
 {
     [SerializeField]
-    private float destroyTime = 60.0f;
+    private float destroyTime = 600.0f;
 
     void Start()
     {
-        Destroy(this.gameObject, destroyTime);
+        //Destroy(this.gameObject, destroyTime);
     }
 
 

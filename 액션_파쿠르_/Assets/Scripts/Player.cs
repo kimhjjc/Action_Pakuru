@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
             return instance;
         }
     }
+
     private AudioSource jumpAudio;
     public AudioClip jumpSound;
 
@@ -38,7 +39,7 @@ public class Player : MonoBehaviour
 
     float jumpCoolDownTime;
 
-    //Animator animator;
+    Animator animator;
 
 
     void Awake()
@@ -72,7 +73,7 @@ public class Player : MonoBehaviour
         isWallForwardContact = false;
 
         jumpCoolDownTime = 0;
-        //animator = GetComponentInChildren<Animator>();
+        animator = GetComponentInChildren<Animator>();
         //animator.SetFloat("Move", 0);
     }
 
@@ -108,6 +109,15 @@ public class Player : MonoBehaviour
 
     void Move()
     {
+        animator.SetBool("Climbing", false);
+        animator.SetBool("LeftClimbing", false);
+        animator.SetBool("RightClimbing", false);
+
+        if (isJumpAble == false)
+            animator.SetBool("Jump", true);
+        else
+            animator.SetBool("Jump", false);
+
         if (isWallForwardContact)
         {
             Vector3 _direction = new Vector3(0, 1, 0);
@@ -120,15 +130,28 @@ public class Player : MonoBehaviour
             );
             modelTransform.LookAt(modelTransform.position + forward * 50);
 
-            rigidBody.MovePosition(transform.position + _direction * realSpeed * 20.0f * Time.deltaTime);
-            rigidBody.velocity = Vector3.zero;
+            rigidBody.velocity = Vector3.up * baseSpeed;
+
+            animator.SetBool("Climbing", true);
             return;
         }
 
         Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, 1);
+        Vector3 directRotation = Vector3.zero;
         Vector3 vel;
         if (((isWallLeftContact && direction.x > 0) || (isWallRightContact && direction.x < 0)) && jumpCoolDownTime <= 0.0f)
         {
+            if (isWallLeftContact)
+            {
+                animator.SetBool("LeftClimbing", true);
+                directRotation.z = 30.0f;
+            }
+            else
+            {
+                animator.SetBool("RightClimbing", true);
+                directRotation.z = -30.0f;
+            }
+
             direction.x = 0;
             vel = rigidBody.velocity;
             vel.x = 0;
@@ -146,9 +169,16 @@ public class Player : MonoBehaviour
             );
             modelTransform.LookAt(modelTransform.position + forward * 50);
 
+            Vector3 m_Rotation = Vector3.Slerp(
+            modelTransform.rotation.eulerAngles,
+            directRotation,
+            rotationSpeed * Time.deltaTime / Vector3.Angle(modelTransform.rotation.eulerAngles, directRotation)
+            );
+            modelTransform.SetPositionAndRotation(modelTransform.position, Quaternion.Euler(m_Rotation));
+
         }
         // Move()를 이용해 이동, 충돌 처리, 속도 값 얻기 가능
-        //rigidBody.MovePosition(transform.position + direction * realSpeed * Time.deltaTime);
+
         rigidBody.velocity += direction * realSpeed * Time.deltaTime * 10.0f;
 
         vel = rigidBody.velocity;
@@ -174,7 +204,7 @@ public class Player : MonoBehaviour
         rigidBody.velocity = vel;
 
         Jump();
-        //animator.SetFloat("Move", characterController.velocity.magnitude);
+        //animator.SetFloat("Move", rigidBody.velocity.magnitude);
     }
 
     void Jump()

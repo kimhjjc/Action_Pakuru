@@ -58,14 +58,14 @@
     <Compile Include="Assets\Scripts\Pattern.cs" />
     <Compile Include="Assets\Scripts\EndingSceneController.cs" />
     <Compile Include="Assets\Scripts\Map.cs" />
+    <Compile Include="Assets\Scripts\FailSceneController.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\Booster.cs" />
     <Compile Include="Assets\Scripts\MyGameManager.cs" />
+    <Compile Include="Assets\Scripts\FinishLinePos.cs" />
     <Compile Include="Assets\Scripts\Timer.cs" />
     <Compile Include="Assets\Scripts\MySlider.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
-    <Compile Include="Assets\Scripts\FinishLinePos.cs" />
-    <Compile Include="Assets\Scripts\FailSceneController.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Asset\SD Unity-Chan Haon Custom\Shader\Unity-chan Toon Shader Ver 2.0.6\Toon_DoubleShadeWithFeather_Mobile_TransClipping_StencilMask.shader" />
